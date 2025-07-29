@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package com.food.ordering.system.kafka.order.avro.model;
+
+option go_package = "github.com/taneats/infrastructure/kafka/kafka-model/generated";
+
+import "google/protobuf/timestamp.proto";
+
+enum PaymentOrderStatus {
+  PENDING = 0;
+  CANCELLED = 1;
+}
+
+message PaymentRequestProtoModel {
+  string id = 1;
+  string saga_id = 2;
+  string customer_id = 3;
+  string order_id = 4;
+  string price = 5;
+  google.protobuf.Timestamp created_at = 6;
+  PaymentOrderStatus payment_order_status = 7;
+} 

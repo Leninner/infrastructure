@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package com.food.ordering.system.kafka.order.avro.model;
+
+option go_package = "github.com/taneats/infrastructure/kafka/kafka-model/generated";
+
+import "google/protobuf/timestamp.proto";
+
+enum OrderApprovalStatus {
+  APPROVED = 0;
+  REJECTED = 1;
+}
+
+message RestaurantApprovalResponseProtoModel {
+  string id = 1;
+  string saga_id = 2;
+  string restaurant_id = 3;
+  string order_id = 4;
+  google.protobuf.Timestamp created_at = 5;
+  OrderApprovalStatus order_approval_status = 6;
+  repeated string failure_messages = 7;
+} 

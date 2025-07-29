@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package com.food.ordering.system.kafka.order.avro.model;
+
+option go_package = "github.com/taneats/infrastructure/kafka/kafka-model/generated";
+
+import "google/protobuf/timestamp.proto";
+
+message CustomerAvroModel {
+  string id = 1;
+  string username = 2;
+  string first_name = 3;
+  string last_name = 4;
+  google.protobuf.Timestamp created_at = 5;
+} 
