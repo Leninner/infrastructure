@@ -8,7 +8,7 @@ import "google/protobuf/timestamp.proto";
 
 enum PaymentStatus {
   COMPLETED = 0;
-  CANCELLED = 1;
+  PAYMENT_CANCELLED = 1;
   FAILED = 2;
 }
 

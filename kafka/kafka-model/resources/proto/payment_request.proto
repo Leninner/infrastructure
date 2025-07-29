@@ -8,7 +8,7 @@ import "google/protobuf/timestamp.proto";
 
 enum PaymentOrderStatus {
   PENDING = 0;
-  CANCELLED = 1;
+  PAYMENT_ORDER_CANCELLED = 1;
 }
 
 message PaymentRequestProtoModel {
@@ -16,7 +16,7 @@ message PaymentRequestProtoModel {
   string saga_id = 2;
   string customer_id = 3;
   string order_id = 4;
-  string price = 5;
+  double price = 5;
   google.protobuf.Timestamp created_at = 6;
   PaymentOrderStatus payment_order_status = 7;
 } 

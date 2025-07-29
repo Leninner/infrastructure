@@ -1,70 +1,50 @@
 package kafkaconfigdata
 
-import "github.com/confluentinc/confluent-kafka-go/v2/kafka"
+import (
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
+)
 
 type KafkaConsumerConfigData struct {
-	GroupID                string
-	AutoOffsetReset        string
-	SessionTimeoutMs       int
-	HeartbeatIntervalMs    int
-	MaxPollIntervalMs      int
-	MaxPollRecords         int
-	MaxPartitionFetchBytes int
-	EnableAutoCommit       bool
-	AutoCommitIntervalMs   int
-	FetchMinBytes          int
-	FetchMaxWaitMs         int
-	IsolationLevel         string
+	GroupID             string
+	AutoOffsetReset     string
+	SessionTimeoutMs    int
+	HeartbeatIntervalMs int
+	MaxPollIntervalMs   int
+	MaxPollRecords      int
+	EnableAutoCommit    bool
+	FetchMinBytes       int
+	FetchMaxWaitMs      int
+}
+
+func NewKafkaConsumerConfigData() *KafkaConsumerConfigData {
+	return &KafkaConsumerConfigData{
+		GroupID:             getEnv("KAFKA_CONSUMER_GROUP_ID", "default-group"),
+		AutoOffsetReset:     getEnv("KAFKA_CONSUMER_AUTO_OFFSET_RESET", "earliest"),
+		SessionTimeoutMs:    getEnvAsInt("KAFKA_CONSUMER_SESSION_TIMEOUT_MS", 30000),
+		HeartbeatIntervalMs: getEnvAsInt("KAFKA_CONSUMER_HEARTBEAT_INTERVAL_MS", 3000),
+		MaxPollIntervalMs:   getEnvAsInt("KAFKA_CONSUMER_MAX_POLL_INTERVAL_MS", 300000),
+		MaxPollRecords:      getEnvAsInt("KAFKA_CONSUMER_MAX_POLL_RECORDS", 500),
+		EnableAutoCommit:    false,
+		FetchMinBytes:       getEnvAsInt("KAFKA_CONSUMER_FETCH_MIN_BYTES", 1),
+		FetchMaxWaitMs:      getEnvAsInt("KAFKA_CONSUMER_FETCH_MAX_WAIT_MS", 500),
+	}
 }
 
 func (k *KafkaConsumerConfigData) ToConfigMap(baseConfig kafka.ConfigMap) kafka.ConfigMap {
-	config := baseConfig
-
-	if k.GroupID != "" {
-		config["group.id"] = k.GroupID
+	config := kafka.ConfigMap{}
+	for key, value := range baseConfig {
+		config[key] = value
 	}
 
-	if k.AutoOffsetReset != "" {
-		config["auto.offset.reset"] = k.AutoOffsetReset
-	}
-
-	if k.SessionTimeoutMs > 0 {
-		config["session.timeout.ms"] = k.SessionTimeoutMs
-	}
-
-	if k.HeartbeatIntervalMs > 0 {
-		config["heartbeat.interval.ms"] = k.HeartbeatIntervalMs
-	}
-
-	if k.MaxPollIntervalMs > 0 {
-		config["max.poll.interval.ms"] = k.MaxPollIntervalMs
-	}
-
-	if k.MaxPollRecords > 0 {
-		config["max.poll.records"] = k.MaxPollRecords
-	}
-
-	if k.MaxPartitionFetchBytes > 0 {
-		config["max.partition.fetch.bytes"] = k.MaxPartitionFetchBytes
-	}
-
+	config["group.id"] = k.GroupID
+	config["auto.offset.reset"] = k.AutoOffsetReset
+	config["session.timeout.ms"] = k.SessionTimeoutMs
+	config["heartbeat.interval.ms"] = k.HeartbeatIntervalMs
+	config["max.poll.interval.ms"] = k.MaxPollIntervalMs
+	config["max.poll.records"] = k.MaxPollRecords
 	config["enable.auto.commit"] = k.EnableAutoCommit
-
-	if k.AutoCommitIntervalMs > 0 {
-		config["auto.commit.interval.ms"] = k.AutoCommitIntervalMs
-	}
-
-	if k.FetchMinBytes > 0 {
-		config["fetch.min.bytes"] = k.FetchMinBytes
-	}
-
-	if k.FetchMaxWaitMs > 0 {
-		config["fetch.max.wait.ms"] = k.FetchMaxWaitMs
-	}
-
-	if k.IsolationLevel != "" {
-		config["isolation.level"] = k.IsolationLevel
-	}
+	config["fetch.min.bytes"] = k.FetchMinBytes
+	config["fetch.max.wait.ms"] = k.FetchMaxWaitMs
 
 	return config
 }
